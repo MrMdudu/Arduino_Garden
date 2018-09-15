@@ -1,9 +1,20 @@
+/*
+ * Code for arduino nano in project Arduino_Garden
+ * Use multiple sensors:
+ *    DHT22 temperature and humidity sensor
+ *    Photorestistor module
+ *    Soil moisture sensor module
+ * 
+ * MrMdudu   15.09.2018   (version 1.0)
+ * 
+ */
+
 #include <DHT.h>
 #include <SD.h>
 #include <SPI.h>
 #include <LiquidCrystal.h>
 
-// Maybe temporary, soft serial used to display info on PC
+// Softserial used for debugging
 // Hard Serial is used to communicate with ESP8266 module 
   #include <SoftwareSerial.h>
   
@@ -39,6 +50,7 @@
   const unsigned long interval = 900000; // 15min
   unsigned long currentMillis = 0;
   unsigned long previousMillis = 0;
+  
 /****************************SETUP********************************/
 void setup() {
 // Initialize Serial connection 
@@ -106,15 +118,6 @@ void loop() {
       LCD.print(" %");
       delay(1000);
     }
-    
-  // Sending Data to the ESP8266 module 
-  // Data is: Air humidity, Air temperature, raw luminosity, raw soil humidity
-  //  if(Serial.available()){
-  //    delay(10);
-   //   String inSerial = Serial.readString();
-   //   Serial1.println("Got message");
-     // if(find_text("Waiting", inSerial) != -1){
-     //if(inSerial == "Waiting\n"){
 
     currentMillis = millis();
     if ((unsigned long)(currentMillis - previousMillis) >= interval) {
@@ -129,8 +132,7 @@ void loop() {
                    + ", raw soil humidity= " + String(soil));
             Serial1.println("Sent message");
     }
-      //}
-    //}
+
     delay(100);
   // Listen for eventual ESP response
     if(Serial.available()) {

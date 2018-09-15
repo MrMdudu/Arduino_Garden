@@ -1,14 +1,25 @@
-
+/*
+ * Code for ESP8266 in project Arduino_Garden
+ * Sends data recieved from arduino board to the Google sheets
+ * Using a google script
+ *
+ * Credit to electronics guy for HTTPSRedirect library and 
+ * code example I modified to fit my project
+ * Visit his GitHub at : https://github.com/electronicsguy
+ * 
+ * MrMdudu   15.09.2018   (version 1.0)
+ * 
+ */
+ 
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
 #include "HTTPSRedirect.h"
 
 ESP8266WiFiMulti wifiMulti;
 char c = '\n';
-//const char *GScriptId = "AKfycbyEaHAgVgEU2HMw__1kCQ7cl8yTHpc0XcaDm3_X";
-const char *GScriptId = "AKfycbyQ84tvKWJKy-2Dr0uZ49B-nDjE5mUlLJmZMXJ5caXKbbrTr54";
-//https://script.google.com/macros/s/AKfycbyEaHAgVgEU2HMw__1kCQ7cl8yTHpc0XcaDm3_X/exec
-//https://script.google.com/macros/s/AKfycbyEaHAgVgEU2HMw__1kCQ7cl8yTHpc0XcaDm3_X/exec
+
+const char *GScriptId = "<-----------------Your script ID here----------------->";
+
 
 const char* host = "script.google.com";
 const char* googleRedirHost = "script.googleusercontent.com";
@@ -21,8 +32,6 @@ String url = String("/macros/s/") + GScriptId + "/exec?";
 
 const char* fingerprint = "F0 5C 74 77 3F 6B 25 D7 3B 66 4D 43 2F 7E BC 5B E9 28 86 AD";
 
-// try this one it should get certificate match (maybe)
-//const char* fingerprint = "36 62 15 B0 90 FB C9 3C 32 55 D6 42 34 70 C9 8E FF 19 90 F5";
 /*****************************************SETUP**************************************************/
 void setup() {
   Serial.begin(115200);
@@ -31,8 +40,8 @@ void setup() {
 // Setup Wifi connection as client station using wifiMulti to connect to the strongest signal 
 // between all known wifis
   WiFi.mode(WIFI_STA);
-  wifiMulti.addAP("zan-34284", "h2df-f2pn-5jxs-o1os");
-  wifiMulti.addAP("SFR_D730", "floryda7yfithestlera");
+  wifiMulti.addAP("ssid_from_AP_1", "your_password_for_AP_1");
+  wifiMulti.addAP("ssid_from_AP_2", "your_password_for_AP_2");
   wifiMulti.addAP("ssid_from_AP_3", "your_password_for_AP_3");
 
   Serial.println("Connecting Wifi");
@@ -106,8 +115,6 @@ void loop() {
     }
   // GET request with payload
     String urlFinal = url + payload;
-    //client.printRedir(urlFinal, host, googleRedirHost);
-    //client.POST(urlFinal, host, googleRedirHost);
     client.GET(urlFinal, host);
   }
   delay(1000);
